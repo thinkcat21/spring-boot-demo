@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rosegal.web.demo.mapper.UserMapper">
+
+    <insert id="insert" parameterType="UserDo">
+        insert into user (id, username, nickname, email, is_lock, created_at, updated_at)
+        values (#{id}, #{username}, #{nickname}, #{email}, #{isLock}, #{createdAt}, #{updatedAt})
+        <selectKey keyProperty="id" order="AFTER" resultType="long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <delete id="deleteByQuery">
+        delete from user
+        <where>
+            <trim prefixOverrides="and">
+                <if test="id">and id = #{id}</if>
+                <if test="email">and email = #{email}</if>
+            </trim>
+        </where>
+    </delete>
+
+    <select id="findById" resultType="UserDo">
+        select *
+        from user
+        where id = #{id}
+    </select>
+
+    <select id="findByQuery" resultType="UserDo">
+        select *
+        from user
+        <where>
+            <trim prefixOverrides="and">
+                <if test="id">and id = #{id}</if>
+                <if test="email">and email = #{email}</if>
+            </trim>
+        </where>
+    </select>
+</mapper>

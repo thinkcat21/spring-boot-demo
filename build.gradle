@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+}
+
+group 'com.rosegal.web'
+version '1.0.0.SNAPSHOT'
+
+applicationName = 'demo'
+mainClassName = 'com.rosegal.web.demo.Application'
+
+sourceCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    mavenCentral()
+}
+
+dependencies {
+
+    //单元测试
+    testCompile(
+            'junit:junit:4.12',
+            'org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE'
+    )
+
+    //使用lombok减少样本代码，比如实体类中的getter or setter
+    compileOnly 'org.projectlombok:lombok:1.18.6'
+    annotationProcessor 'org.projectlombok:lombok:1.18.6'
+
+    compile(
+            //spring MVC框架，根据依赖关系会加载其它jar包。
+            'org.springframework.boot:spring-boot-starter-web:2.1.6.RELEASE',
+            //log4j2日志框架
+            'org.springframework.boot:spring-boot-starter-log4j2:2.1.6.RELEASE',
+            'com.lmax:disruptor:3.4.2',
+            //连接MySQL驱动jar包
+            'mysql:mysql-connector-java:8.0.17',
+            //mybatis框架
+            'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0',
+            //mybatis翻页插件
+            'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.12',
+            //连接池
+            'com.alibaba:druid-spring-boot-starter:1.1.18',
+    )
+
+    configurations {
+        //排除spring boot依赖中的logging包以使用log4j2
+        all {
+            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        }
+    }
+
+}

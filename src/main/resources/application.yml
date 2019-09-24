@@ -1,0 +1,40 @@
+server:
+  port: 8090
+  # 启用GZip压缩
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+# spring框架配置
+spring:
+  application:
+    name: demo
+  # MySQL连接池配置
+  datasource:
+    druid:
+      name: DataSource-${spring.application.name}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1/test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+      username: admin
+      password: admin
+      max-active: 100
+      min-idle: 3
+      min-evictable-idle-time-millis: 300000
+      test-on-borrow: false
+      test-on-return: false
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      web-stat-filter:
+        enabled: false
+      stat-view-servlet:
+        enabled: false
+      initial-size: 5
+      pool-prepared-statements: false
+      max-wait: 60000
+# mybatis框架配置
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.rosegal.web.demo.model

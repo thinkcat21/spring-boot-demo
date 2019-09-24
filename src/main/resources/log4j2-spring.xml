@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="appName">myproject-web</Property>
+        <Property name="logPath">/data/apps/${appName}/logs</Property>
+        <Property name="stdoutPattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} [%15.15t] %-40.40c{1.} : %m%n%ex
+        </Property>
+        <Property name="fout-pattern">${stdoutPattern}</Property>
+    </Properties>
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="stdout" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>${stdoutPattern}</pattern>
+            </PatternLayout>
+        </Console>
+
+        <!-- 滚动记录到文件中 -->
+        <RollingRandomAccessFile name="fout" fileName="${logPath}/${appName}.log"
+                                 filePattern="${logPath}/$${date:yyyy-MM}/${appName}-%d{yyyy-MM-dd-HH}-%i.log">
+            <PatternLayout>
+                <pattern>${fout-pattern}</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- 每6小时生成一个新文件 -->
+                <TimeBasedTriggeringPolicy interval="6" modulate="true" maxRandomDelay="0"/>
+                <!-- 当前写入的文件超过250MB时生成新文件 -->
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <!-- 每天最多生成20个文件，超过此值将滚动删除旧文件。 -->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <!-- 异步记录指定包中的日志到文件 -->
+        <AsyncLogger name="com.rosegal.web.demo" level="info" additivity="false">
+            <AppenderRef ref="fout"/>
+            <AppenderRef ref="stdout"/>
+        </AsyncLogger>
+        <AsyncLogger name="com.rosegal.web.demo.mapper" level="debug" additivity="false">
+            <AppenderRef ref="stdout"/>
+        </AsyncLogger>
+        <!-- 缺省记录器，比如第三方jar包中的日志 -->
+        <AsyncRoot level="info">
+            <AppenderRef ref="fout"/>
+            <AppenderRef ref="stdout"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>
